@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+
+model Note {
+  id              Int       @id @default(autoincrement())
+  title           String
+  description     String?
+  archived        Boolean   @default(false)
+  tags            TagOnNote[]  // Optional: A Note can have zero or more tags.
+  backgroundColor String?
+  pinned          Boolean   @default(false)
+  userId          String 
+}
+
+model Tag {
+  id       Int       @id @default(autoincrement())
+  name     String
+  notes    TagOnNote[]  // Optional: A Tag can be unassigned to any Note.
+  userId   String
+}
+
+model TagOnNote {
+  noteId Int
+  tagId  Int
+  note   Note  @relation(fields: [noteId], references: [id])
+  tag    Tag   @relation(fields: [tagId], references: [id])
+
+  @@id([noteId, tagId])
+}
+
+
