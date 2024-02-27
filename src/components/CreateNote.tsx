@@ -1,11 +1,9 @@
-import { Note, Tag } from '@prisma/client';
-import React, { useEffect, useRef, useState } from 'react'
-import { Button } from './ui/button';
-import { MdOutlineArchive, MdOutlineColorLens, MdOutlineNewLabel } from 'react-icons/md';
-import { BsFillPinFill, BsPin } from 'react-icons/bs';
 import { api } from '@/utils/api';
+import { Note, Tag } from '@prisma/client';
+import { useEffect, useRef, useState } from 'react';
+import { BsFillPinFill, BsPin } from 'react-icons/bs';
 import Tags from './Tags';
-import BottomNavbar1 from './NotesOptionsComp/BottomNavbar1';
+import { Button } from './ui/button';
 
 export const initialNote = {
     title:'', 
@@ -21,10 +19,11 @@ type Props = {
 
 const CreateNote = ({tag}: Props) => {
     const [openCreateNote, setOpenCreateNote] = useState(false);
-    const noteCreationRef = useRef<HTMLDivElement>(null); // Ref for the note creation div
     const [note, setNote] = useState<
     Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned' >
     >(initialNote);
+
+    const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
     const ctx = api.useUtils();
 
@@ -46,7 +45,11 @@ const CreateNote = ({tag}: Props) => {
         },
     })
 
-
+    useEffect(() => {
+        if (openCreateNote) {
+            textAreaRef.current?.focus();
+        }
+    }, [openCreateNote]);
 
     const handleCreateNote = async() => {
         
@@ -56,25 +59,7 @@ const CreateNote = ({tag}: Props) => {
             backgroundColor:note.backgroundColor!, 
         })
     }
-
-     // Click outside handler
-     useEffect(() => {
-        function handleClickOutside(event: MouseEvent) {
-            if (noteCreationRef.current && !noteCreationRef.current.contains(event.target as Node)) {
-                handleClose(); // Close the note creation form if click is outside
-            }
-        }
-
-        // Add event listeners
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => {
-            // Remove event listeners on cleanup
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [noteCreationRef]);
-
-   
-
+ 
     const handleClose = () => {
         if(note.title.trim().length === 0 && note.description!.trim().length === 0 ){
             setOpenCreateNote(false)
@@ -84,43 +69,53 @@ const CreateNote = ({tag}: Props) => {
         }
     }
   return (
-    <div className='py-3 px-4 drop-shadow-md   border bg-white w-full max-w-lg rounded-lg mx-auto relative' >
-            {openCreateNote ? 
-                <div ref={noteCreationRef} >
-                    <Button variant="ghost" size={'icon'} className='rounded-full absolute right-2 top-2 group' onClick={()=>setNote({...note, pinned: !note.pinned})}>
-                        {note.pinned ? 
-                            <BsFillPinFill className='w-5 h-5 text-gray-600 group-hover:text-black' />
-                         : 
-                            <BsPin   className='w-5 h-5 text-gray-600 group-hover:text-black' />
-                         }
+    <>
+        {
+            openCreateNote && 
+            <div className='w-screen h-screen bg-black/20 absolute inset-0 z-20' onClick={()=>setOpenCreateNote(false)}/> 
+        }
+        <div className={`py-3 px-4 drop-shadow-md   border bg-white w-full max-w-lg rounded-lg mx-auto relative ${openCreateNote && 'z-30'}`} >
+                {openCreateNote ? 
+                    <div  >
+                        <Button variant="ghost" size={'icon'} className='rounded-full absolute right-2 top-2 group' onClick={()=>setNote({...note, pinned: !note.pinned})}>
+                            {note.pinned ? 
+                                <BsFillPinFill className='w-5 h-5 text-gray-600 group-hover:text-black' />
+                            : 
+                                <BsPin   className='w-5 h-5 text-gray-600 group-hover:text-black' />
+                            }
+                                </Button>
+                        <input 
+                            type="text" 
+                            className='block w-full outline-none' 
+                            placeholder='Title' 
+                            onChange={(e)=>{
+                                setNote({...note, title: e.target.value})
+                            }}
+                        />
+                        <textarea 
+                            className='text-sm block w-full mt-4 outline-none resize-none'
+                            placeholder='Take a note...'
+                            onChange={(e)=>{
+                                setNote({...note, description: e.target.value})
+                            }}
+                            ref={textAreaRef}
+                        />
+                        {tag && <Tags   tag={tag}/>}
+                        <div className='mt-2 flex justify-between items-center'>
+                            {/* <BottomNavbar1 editNote={note} setEditNote={setNote} /> */}
+                            <div className='flex'>
+                                
+                            </div>
+                            <Button variant="ghost"  className='rounded-md' onClick={handleClose}>
+                                Close
                             </Button>
-                    <input 
-                        type="text" 
-                        className='block w-full outline-none' 
-                        placeholder='Title' 
-                        onChange={(e)=>{
-                            setNote({...note, title: e.target.value})
-                        }}
-                    />
-                    <textarea 
-                        className='text-sm block w-full mt-4 outline-none resize-none'
-                        placeholder='Take a note...'
-                        onChange={(e)=>{
-                            setNote({...note, description: e.target.value})
-                        }}
-                    />
-                    {tag && <Tags   tag={tag}/>}
-                    <div className='mt-2 flex justify-between items-center'>
-                        <BottomNavbar1 editNote={note} setEditNote={setNote} />
-                        <Button variant="ghost"  className='rounded-md' onClick={handleClose}>
-                            Close
-                        </Button>
-                    </div>
-                </div > 
-                : <div onClick={()=>setOpenCreateNote(true)} className='cursor-text	'>Take a note...</div>
-            }
-            
-        </div>
+                        </div>
+                    </div > 
+                    : <div onClick={()=>{setOpenCreateNote(true); textAreaRef.current?.focus()}} className='cursor-text	'>Take a note...</div>
+                }
+                
+            </div>
+    </>
   )
 }
 

@@ -215,14 +215,10 @@ const NatesData = ({
                                     onClick={(e) => {
                                         e.stopPropagation()
                                         if (openNote?.id !== note.id) {
-                                            if(  !notesActionRef?.current?.contains(e.target as Node)){
+                                            // if(  !notesActionRef?.current?.contains(e.target as Node)){
                                                 setOpenNote(note)
-                                            }
-                                            // if(notesActionRef.current){
-
-                                            //     console.log(notesActionRef.current.contains(e.target as Node), 'notesActionRef.current')
                                             // }
-                                            // setOpenNote(note)
+                                   
                                             console.log('logging')
                                             handleClick(index)
                                         }
@@ -244,7 +240,7 @@ const NatesData = ({
                                     <div className="px-3">
                                         <h2 className="font-medium text-lg">{note.title}</h2>
                                         <p className="text-base mt-4 text-gray-700">
-                                            {note.description}
+                                            <textarea className="bg-transparent resize-none cursor-default	outline-none border-none" readOnly name="" id=""  value={note.description ?? ''}/>
                                         </p>
                                     </div>
                                     <NoteTagsSection note={note}/>

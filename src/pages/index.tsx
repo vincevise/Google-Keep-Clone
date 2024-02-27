@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 
+
 export const fontSans = FontSans({
   subsets: ["latin"],
   variable: "--font-sans",
@@ -24,18 +25,18 @@ export default function Home() {
   console.log(router, 'router');
   const { data: notes, isLoading, isError } = api.note.getNotes.useQuery()
 
-  
 
-  const [pinnedNotes, setPinnedNotes] = useState(notes?.filter((x)=>x.pinned && !x.archived) ?? [])
-  const [unpinned, setUnpinnedNotes] = useState(notes?.filter((x)=>!x.pinned && !x.archived) ?? [])
+
+  const [pinnedNotes, setPinnedNotes] = useState(notes?.filter((x) => x.pinned && !x.archived) ?? [])
+  const [unpinned, setUnpinnedNotes] = useState(notes?.filter((x) => !x.pinned && !x.archived) ?? [])
   console.log(pinnedNotes, 'pinnedNotes')
 
-  useEffect(()=>{
-    if(notes){
-      setPinnedNotes(notes.filter((x)=>!x.archived && x.pinned))
-      setUnpinnedNotes(notes?.filter((x)=>!x.pinned && !x.archived))
+  useEffect(() => {
+    if (notes) {
+      setPinnedNotes(notes.filter((x) => !x.archived && x.pinned))
+      setUnpinnedNotes(notes?.filter((x) => !x.pinned && !x.archived))
     }
-  },[notes])
+  }, [notes])
 
 
   return (
@@ -47,26 +48,26 @@ export default function Home() {
       </Head>
 
       <AppLayout>
-      <div className='w-full '>
-        <CreateNote/>
-        {/* {notes && notes.} */}
-         
-         <div className='mt-4'>
-          <h2 className='text-sm font-medium uppercase text-gray-500 my-4'>
-            {pinnedNotes.length > 0 && 'Pinned'}
-          </h2>
-          {notes && 
-            <NotesData notes={pinnedNotes}/>
-          }
+        <div className='w-full '>
+          <CreateNote />
+          {/* {notes && notes.} */}
 
-          <h2 className='text-sm font-medium uppercase text-gray-500 my-4'>
-            {pinnedNotes.length > 0 && 'Other'}
-          </h2>
-          {notes && 
-            <NotesData notes={unpinned}/>
-          }
-         </div>
-    </div>
+          <div className='mt-4'>
+            <h2 className='text-sm font-medium uppercase text-gray-500 my-4'>
+              {pinnedNotes.length > 0 && 'Pinned'}
+            </h2>
+            {notes &&
+              <NotesData notes={pinnedNotes} />
+            }
+
+            <h2 className='text-sm font-medium uppercase text-gray-500 my-4'>
+              {pinnedNotes.length > 0 && 'Other'}
+            </h2>
+            {notes &&
+              <NotesData notes={unpinned} />
+            }
+          </div>
+        </div>
       </AppLayout>
 
     </>

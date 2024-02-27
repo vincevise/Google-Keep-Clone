@@ -3,7 +3,7 @@ import NavBar from "@/components/Bar/NavBar";
 import Sidebar from "@/components/Bar/Sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { SignInButton, useUser } from "@clerk/nextjs";
+import { SignInButton, useUser, redirectToSignUp } from "@clerk/nextjs";
 import { Inter as FontSans } from "next/font/google";
 import { useRouter } from "next/router";
 import { ReactNode, useState } from "react";
@@ -43,7 +43,7 @@ export default function AppLayout({children}:Props) {
             ?
             (
               <>
-                <main  >
+                <main className="" >
                   <NavBar setOpenSideBar={setOpenSideBar}/>
                   <div className="flex h-full  ">
 

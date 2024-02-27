@@ -1,25 +1,43 @@
-import { Dispatch, MouseEvent, SetStateAction } from 'react'
-import { MdOutlineColorLens, MdOutlineFormatColorReset } from 'react-icons/md' 
+import React, { Dispatch, MouseEvent, SetStateAction } from 'react'
+import { MdOutlineColorLens, MdOutlineNewLabel, MdOutlineArchive, MdOutlineFormatColorReset } from 'react-icons/md'
+
+import { fontSans } from '@/pages'
+import { Poppins } from 'next/font/google'
 import { bgcolor } from '@/lib/ui'
-import { api } from '@/utils/api'
+import { PiMagnifyingGlass } from 'react-icons/pi'
 import { Note } from '@prisma/client'
-import { Button } from './ui/button'
+import { api } from '@/utils/api'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
+import { Button } from './ui/button'
 
 type Props = {
-    editNote: Note | Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned'>,
-    setVal: (val:string)=> void
+    editNote: Note,
+    setEditNote: Dispatch<SetStateAction<Note>>
 }
 
 const ColorButton = 'rounded-full w-8 h-8 border-2 border-transparent  hover:border-black flex items-center justify-center'
-  
-export function hasId(note: Note | Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned'>): note is Note {
-    return (note as Note).id !== undefined;
-}
- 
 
-const ChangeColorMenu = ({ editNote, setVal }: Props) => {
+function conformsToInterface(obj: any, intf: any) {
+    for (let prop in intf) {
+        if (!(prop in obj)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+const NoteInterface: Note = {
+    archived: true,
+    backgroundColor: '',
+    description: '',
+    id: 1,
+    pinned: true,
+    title: '',
+    userId: ''
+}
+
+const ChangeColorMenu = ({ editNote, setEditNote }: Props) => {
     const ctx = api.useUtils();
 
 
@@ -33,10 +51,8 @@ const ChangeColorMenu = ({ editNote, setVal }: Props) => {
     )
     const handleChangeColor = (e: MouseEvent<HTMLButtonElement>) => {
         const color = e.currentTarget.dataset.color
-        if (hasId(editNote)) {
-            mutate({ id: editNote.id, backgroundColor: color ?? '' });
-        }
-        setVal(color ?? '')
+        mutate({ id: editNote.id, backgroundColor: color ?? '' })
+        setEditNote({ ...editNote, backgroundColor: color ?? '' })
     }
 
 

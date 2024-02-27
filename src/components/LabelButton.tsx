@@ -106,7 +106,7 @@ export default function LabelButton({ note, notesActionRef }: Props) {
       </Tooltip>
       {
 
-        openColor && <div className='absolute w-fit left-0 -bottom-[86%] bg-white border p-4 rounded-md drop-shadow-md'
+        openColor && <div className='absolute w-fit left-0 -bottom-[170px]   bg-white border p-4 rounded-md drop-shadow-md'
           ref={(ref) => {
             notesActionRef.current = ref;
           }}>

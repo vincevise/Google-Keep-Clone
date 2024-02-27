@@ -31,29 +31,20 @@ function isNote(obj: any): obj is Note {
 
 
 type Props = {
-    editNote: Note | Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned'>
-    setEditNote:Dispatch<SetStateAction<Note | Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned'>>>,
+    editNote: Note 
+    setEditNote:Dispatch<SetStateAction<Note>>,
 }
 
 // THis is EditModal
 
 const BottomNavbar1 = ({editNote, setEditNote   }: Props) => {
-
-    
-    
-    
-
+ 
     return (
         <div className="mb-1 px-1">
             <div className={` flex  gap-2 group  font-sans  `}>
                 {/* Color Button */}
             
-                <ChangeColorMenu 
-                    editNote={editNote} 
-                    setVal={(color)=>{
-                        setEditNote({ ...editNote, backgroundColor: color })
-                    }}
-                />
+                <ChangeColorMenu editNote={editNote} setEditNote={setEditNote}/>
 
                 {/* Add label */}
                  <AddLabelMenu editNote={editNote}/>

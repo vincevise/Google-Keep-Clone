@@ -22,7 +22,9 @@ export default function Home() {
   const router = useRouter();
 
   console.log(router, 'router');
-  const { data: notes, isLoading, isError } = api.note.getNotes.useQuery()
+  const { data: notes, isLoading, isError } = api.note.getNotes.useQuery(
+    
+  )
 
 
 

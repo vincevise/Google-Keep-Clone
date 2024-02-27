@@ -22,6 +22,8 @@ export default function ColorButton({ note, notesActionRef }: Props) {
         }
     })
 
+    const menuRef = useRef<any>(null)
+
     const { mutate: deleteNote } = api.note.deleteNote.useMutation({
         onSuccess: () => {
             void ctx.note.getNotes.invalidate()
@@ -46,8 +48,8 @@ export default function ColorButton({ note, notesActionRef }: Props) {
     useEffect(() => {
         // Function to check if click is outside of the dropdown
         const handleClickOutside = (event: any) => {
-            if (openColor && notesActionRef.current && !notesActionRef.current.contains(event.target)) {
-                setOpenColor(false);
+            if (  menuRef.current && !menuRef.current.contains(event.target)) {
+                setOpenColor(!openColor);
             }
         };
 
@@ -58,7 +60,7 @@ export default function ColorButton({ note, notesActionRef }: Props) {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [openColor, notesActionRef]);
+    }, [openColor, menuRef]);
 
     
  
@@ -84,7 +86,7 @@ export default function ColorButton({ note, notesActionRef }: Props) {
 
                 openColor && <div className='absolute w-fit left-0 -bottom-[54px] bg-white border p-2 rounded-md drop-shadow-md' 
                 ref={(ref)=>{
-                    notesActionRef.current=ref;
+                    menuRef.current=ref;
                 }}>
                     <div className='flex items-center gap-2'>
                         <button

@@ -1,3 +1,4 @@
+import ThemeProvider from "@/components/theme-provider";
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -8,6 +9,8 @@ export default function Document() {
         <title>Notes Keep</title>
       </Head>
       <body>
+         
+
         <Main />
         <NextScript />
       </body>
