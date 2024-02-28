@@ -1,5 +1,5 @@
 import { api } from "@/utils/api";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import RGL, { WidthProvider } from "react-grid-layout";
 import { BsPin, BsPinFill } from "react-icons/bs";
 import { PiDotsSixVerticalBold } from "react-icons/pi";
@@ -7,6 +7,7 @@ import BottomNavbar from "./BottomNavbar";
 import EditNoteModal from "./EditNoteModal";
 import { Note } from "@prisma/client";
 import NoteTagsSection from "./NoteTagsSection";
+import { GridContext, useGrid } from "./Layout/AppLayout";
 
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -16,7 +17,6 @@ type Props = {
     items?: number,
     rowHeight?: number,
     onLayoutChange?: (layout: any) => void,
-    cols?: number;
     notes:Note[]
 }
 
@@ -35,14 +35,23 @@ const NatesData = ({
     items = 20,
     rowHeight = 30,
     onLayoutChange = () => { },
-    cols = 4 ,
     notes}: Props) => {
 
     const [layout, setLayout] = useState<any[]>([]);
     const [openNote, setOpenNote] = useState<Note | null>(null);
     const noteRefs = useRef<any>([]);
+    const [cols, setCols] = useState(4)
+    const { isGrid} = useGrid();
 
     const notesActionRef = useRef<HTMLDivElement>(null)
+
+    useEffect(()=>{
+        if(isGrid){
+            setCols(4)
+        }else{
+            setCols(1)
+        }
+    },[isGrid])
 
     const ctx = api.useUtils();
     const { mutate, isSuccess } = api.note.updateNote.useMutation({
@@ -99,7 +108,7 @@ const NatesData = ({
                 setModalStyle((prev: any) => {
                     return {
                         ...prev,
-                        width: 600, // New width
+                        width: 600 , // New width
                         left: `calc(50% - 300px)`, // Center the modal
                         top: `calc(50% - ${Number(prev.height) / 2}px)`, // Adjust top to center vertically
                         height: 'fit-content',
@@ -182,7 +191,7 @@ const NatesData = ({
                 className={className}
                 rowHeight={rowHeight}
                 cols={cols}
-                compactType={"horizontal"}
+                compactType={`${!isGrid ? 'vertical' : 'horizontal'}`}
                 isResizable={false}
             >
 
