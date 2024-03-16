@@ -23,7 +23,7 @@ const NavBar = ({ setOpenSideBar }: Props) => {
     const { setTheme, theme } = useTheme()
     const {isGrid, setIsGrid} = useGrid()
     return (
-        <header className={` h-16 flex  border-b drop-shadow-sm items-center justify-between pl-3 pr-4 fixed top-0 left-0 w-full z-20  `}>
+        <header className={` h-16 flex bg-background border-b drop-shadow-sm items-center justify-between pl-3 pr-4 fixed top-0 left-0 w-full z-20  `}>
             <div className='flex items-center gap-2'>
                 <button
                     className='rounded-full er:bg-white/20 w-12 h-12 flex items-center justify-center'

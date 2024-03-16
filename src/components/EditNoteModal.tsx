@@ -43,11 +43,11 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
 
     return (
         <>
-            <div className={`fixed ${openNote ? 'opacity-100' : 'opacity-0 pointer-events-none'}  transition-all w-screen h-screen top-0 left-0 z-30 bg-black/20`}
+            <div className={`fixed ${openNote ? 'opacity-100' : 'opacity-0 pointer-events-none'}  transition-all w-screen h-screen top-0 left-0 z-30 bg-black/20 text-black`}
                 onClick={()=>setOpenNote(null)}
             ></div>
             <div
-                className="  rounded-lg  z-30 "
+                className=" text-black rounded-lg  z-30 "
                 style={{ 
                     ...modalStyle, 
                     position: 'fixed', 

@@ -223,7 +223,7 @@ const NatesData = ({
                         return (
                             <div
                                 key={note.id}
-                                className={` ${openNote?.id === note.id ? 'opacity-0' : 'opacity-100'}  rounded-lg   select-none	  border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all`}
+                                className={` ${openNote?.id === note.id ? 'opacity-0' : 'opacity-100'}  rounded-lg   select-none	  border border-gray-400 hover:drop-shadow-lg flex group  text-black  w-full   transition-all`}
                                 
                                 data-grid={{ x: 0, y: 0, w: 1, h: notesHeight/rowHeight*2 }}
                             >
