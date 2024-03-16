@@ -38,12 +38,7 @@ export default function LabelButton({ note, notesActionRef }: Props) {
     }
   )
 
-  const handleChangeColor = (e: any) => {
-    e.stopPropagation(); // Prevent the event from bubbling up
-    const color = e.currentTarget.dataset.color;
-    mutate({ id: note.id, backgroundColor: color ?? '' });
-  };
-
+ 
   useEffect(() => {
     // Function to check if click is outside of the dropdown
     const handleClickOutside = (event: any) => {

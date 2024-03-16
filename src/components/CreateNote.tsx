@@ -1,8 +1,10 @@
 import { api } from '@/utils/api';
 import { Note, Tag } from '@prisma/client';
+import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 import { BsFillPinFill, BsPin } from 'react-icons/bs';
-import Tags from './Tags';
+import BottomBarCreate from './BottomBarCreate';
+import TagCreate from './TagCreate';
 import { Button } from './ui/button';
 
 export const initialNote = {
@@ -23,6 +25,10 @@ const CreateNote = ({ tag }: Props) => {
         Pick<Note, 'title' | 'description' | 'archived' | 'backgroundColor' | 'pinned'>
     >(initialNote);
 
+    const [tags, setTags] = useState<Tag[]>(tag ? [tag] : [])
+
+    const { setTheme, theme } = useTheme()
+
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
     const ctx = api.useUtils();
@@ -37,9 +43,14 @@ const CreateNote = ({ tag }: Props) => {
         onSuccess: (note) => {
             setOpenCreateNote(false);
             setNote(initialNote);
-            if (tag) {
-                linkTagsToNote({ noteId: note.id, tagId: tag.id })
+            if(tags.length > 0){
+                tags.forEach((x)=>{
+                    linkTagsToNote({ noteId: note.id, tagId: x.id })
+                })
             }
+            // if (tag) {
+            //     linkTagsToNote({ noteId: note.id, tagId: tag.id })
+            // }
 
             void ctx.note.getNotes.invalidate();
         },
@@ -64,6 +75,7 @@ const CreateNote = ({ tag }: Props) => {
         if (note.title.trim().length === 0 && note.description!.trim().length === 0) {
             setOpenCreateNote(false)
             setNote(initialNote)
+            setTags([])
         } else {
             handleCreateNote()
         }
@@ -72,9 +84,18 @@ const CreateNote = ({ tag }: Props) => {
         <>
             {
                 openCreateNote &&
-                <div className='w-screen h-screen bg-black/20 absolute inset-0 z-20' onClick={() => setOpenCreateNote(false)} />
+                <div className='w-screen h-screen bg-black/20 fixed inset-0 z-20' 
+                onClick={() => {
+                    setOpenCreateNote(false);
+                    setNote({...note, backgroundColor:''})
+                }} 
+                />
             }
-            <div className={`py-3 px-4 drop-shadow-md   border   w-full max-w-lg rounded-lg mx-auto relative ${openCreateNote && 'z-30'}`} >
+            <div className={`py-3 px-4 shadow-md   border   w-full max-w-lg rounded-lg mx-auto relative 
+                ${openCreateNote && 'z-30'}
+                bg-background `} 
+                style={{background:`${note.backgroundColor}`}}
+            >
                 {openCreateNote ?
                     <div  >
                         <Button variant="ghost" size={'icon'} className='rounded-full absolute right-2 top-2 group' onClick={() => setNote({ ...note, pinned: !note.pinned })}>
@@ -100,12 +121,20 @@ const CreateNote = ({ tag }: Props) => {
                             }}
                             ref={textAreaRef}
                         />
-                        {tag && <Tags tag={tag} />}
+                        {/* {tag && <Tags tag={tag} />} */}
+                        <div className='flex items-center gap-2 flex-wrap'>
+                            {tags.length > 0 && tags.map((x)=>{
+                                return (<TagCreate tag={x} setTags={setTags}/>)
+                            })}
+                        </div>
+                        
                         <div className='mt-2 flex justify-between items-center'>
-                            {/* <BottomNavbar1 editNote={note} setEditNote={setNote} /> */}
-                            <div className='flex'>
-
-                            </div>
+                            <BottomBarCreate 
+                                note={note} 
+                                setNote={setNote}
+                                tags={tags}
+                                setTags={setTags}  
+                            />
                             <Button variant="ghost" className='rounded-md' onClick={handleClose}>
                                 Close
                             </Button>

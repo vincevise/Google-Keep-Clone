@@ -73,7 +73,6 @@ export default function ColorButton({ note, notesActionRef }: Props) {
                     <Button variant="ghost" size={'icon'} className='rounded-full text-gray-600 hover:text-black  group-hover:opacity-100 opacity-0 ' onClick={(e) => {
                             e.stopPropagation()
                             setOpenColor(!openColor)
-                            // console.log(clickOutsideRef.current, 'clickOutsideRef')
                         } }>
                         <MdOutlineColorLens className='w-5 h-5' />
                     </Button>

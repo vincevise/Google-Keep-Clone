@@ -62,6 +62,8 @@ const NatesData = ({
         }
     })
 
+    const [notesContainrWidth, setNotesContainerWidth] = useState<number | null>(null)
+
     const [noteStyle, setNoteStyle] = useState<{
         left: string,
         top: string,
@@ -139,6 +141,16 @@ const NatesData = ({
         }
     }, [openNote])
 
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (notesContainerRef.current) {
+                const { x, width } = notesContainerRef.current.getBoundingClientRect();
+                setNotesContainerWidth(width)
+            }
+        }, 100); // Delay might need adjustment
+    
+        return () => clearTimeout(timeout);
+    }, [layout]);
     
 
 
@@ -159,7 +171,6 @@ const NatesData = ({
     };
 
     const handleUpdate = (note: Note, action: 'pinned' | 'archived'  ) => {
-        console.log(action, 'printing action')
         // mutate({id, pinned})
         const newNote = {...note}
         
@@ -176,13 +187,13 @@ const NatesData = ({
         onLayoutChange(layout);
     };
 
-    
+    const notesContainerRef = useRef<HTMLDivElement>(null)
 
     
 
 
     return (
-        <div className="  w-full mx-auto">
+        <div className="  w-full  mx-auto" ref={notesContainerRef} >
 
         
             <ReactGridLayout
@@ -193,6 +204,8 @@ const NatesData = ({
                 cols={cols}
                 compactType={`${!isGrid ? 'vertical' : 'horizontal'}`}
                 isResizable={false}
+                
+             
             >
 
                 {notes && notes.map((note, index) => {
@@ -200,14 +213,19 @@ const NatesData = ({
                         noteRefs.current[index] = React.createRef();
                     }
 
-                    const height = (note.description?.length ?? 0) / 4 + note.title.length / 4
+                    if(notesContainrWidth){
+                        const noteWidth = notesContainrWidth/4 - 43
 
+                        const height = (note.description?.length ?? 0) / 4 + note.title.length / 4
+                        
+                        const notesHeight = Math.ceil(note.description!.length*7 / noteWidth)*16 + Math.ceil(note.title!.length*7 / noteWidth)*16 + 50
+                        console.log(   height , 'notesHeight')
                         return (
                             <div
                                 key={note.id}
                                 className={` ${openNote?.id === note.id ? 'opacity-0' : 'opacity-100'}  rounded-lg   select-none	  border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all`}
                                 
-                                data-grid={{ x: 0, y: 0, w: 1, h: height }}
+                                data-grid={{ x: 0, y: 0, w: 1, h: notesHeight/rowHeight*2 }}
                             >
     
                                 {/* holder */}
@@ -259,6 +277,9 @@ const NatesData = ({
     
                             </div>
                         )
+                    }
+                     
+                    
                 })}
 
             </ReactGridLayout>

@@ -1,12 +1,13 @@
 
-import NavBar from "@/components/Bar/NavBar";
-import Sidebar from "@/components/Bar/Sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { SignInButton, useUser, redirectToSignUp } from "@clerk/nextjs";
 import { Inter as FontSans } from "next/font/google";
 import { useRouter } from "next/router";
 import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import NavBar from "./NavBar";
+import Sidebar from "./Sidebar";
+import Landingpage from "../Landingpage";
 
 
 export const fontSans = FontSans({
@@ -67,7 +68,7 @@ export default function AppLayout({children}:Props) {
     <>
      
 
-
+     <GridContextProvider>
       <div className={cn(
                   "min-h-screen bg-background font-sans antialiased",
                   fontSans.variable
@@ -78,7 +79,7 @@ export default function AppLayout({children}:Props) {
             (
               <>
                 <main className="" >
-                  <GridContextProvider>
+                  
                     <NavBar setOpenSideBar={setOpenSideBar}  />
                     <div className="flex h-full  ">
 
@@ -90,7 +91,7 @@ export default function AppLayout({children}:Props) {
                               </TooltipProvider>
                         </div>
                     </div>
-                  </GridContextProvider>
+                  
                
 
                 </main>
@@ -98,12 +99,13 @@ export default function AppLayout({children}:Props) {
               </>
             )
             :
-            <>
-              <SignInButton >Sign in</SignInButton>
-            </>
+            <div className="w-screen h-screen ">
+               <Landingpage/>
+              
+            </div>
         }
       </div>
-
+      </GridContextProvider>
       {/* {user.user} */}
 
     </>
