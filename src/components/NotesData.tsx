@@ -8,6 +8,7 @@ import EditNoteModal from "./EditNoteModal";
 import { Note } from "@prisma/client";
 import NoteTagsSection from "./NoteTagsSection";
 import { GridContext, useGrid } from "./Layout/AppLayout";
+import CustomTextArea from "./CustomTextArea";
 
 
 const ReactGridLayout = WidthProvider(RGL);
@@ -40,18 +41,50 @@ const NatesData = ({
     const [layout, setLayout] = useState<any[]>([]);
     const [openNote, setOpenNote] = useState<Note | null>(null);
     const noteRefs = useRef<any>([]);
-    const [cols, setCols] = useState(4)
+    const [cols, setCols] = useState(4);
     const { isGrid} = useGrid();
+    const [screenWidth, setScreenWidth] = useState()
+
+    useEffect(() => {
+        const handleResize = () => {
+        //   setScreenWidth(window.innerWidth);
+            if(window.innerWidth < 1024){
+                if(isGrid){
+                    setCols(2)
+                }else{
+                    setCols(1)
+                }
+            }else if(window.innerWidth < 768){
+                if(isGrid){
+                    setCols(2)
+                }else{
+                    setCols(1)
+                }
+            }else{
+                if(isGrid){
+                    setCols(4)
+                }else{
+                    setCols(1)
+                }
+            }
+        };
+    
+        window.addEventListener('resize', handleResize);
+    
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, [isGrid]);
 
     const notesActionRef = useRef<HTMLDivElement>(null)
 
-    useEffect(()=>{
-        if(isGrid){
-            setCols(4)
-        }else{
-            setCols(1)
-        }
-    },[isGrid])
+    // useEffect(()=>{
+    //     if(isGrid){
+    //         setCols(4)
+    //     }else{
+    //         setCols(1)
+    //     }
+    // },[isGrid])
 
     const ctx = api.useUtils();
     const { mutate, isSuccess } = api.note.updateNote.useMutation({
@@ -121,6 +154,7 @@ const NatesData = ({
 
             return () => clearTimeout(timer);
         } else {
+            console.log(noteStyle, 'noteStyle')
             setModalStyle((prevStyle) => ({
                 ...prevStyle,
                 ...noteStyle
@@ -234,7 +268,6 @@ const NatesData = ({
                                 </div>
     
                                 {/* Content */}
-    
                                 <div className={` pt-3  relative w-full h-full  rounded-r-lg  flex flex-col justify-between `}
                                      style={{backgroundColor:(note.backgroundColor === '' ? 'white' : note.backgroundColor) ??  'white'}}
                                     onMouseDown={(e) => e.stopPropagation()}
@@ -264,10 +297,10 @@ const NatesData = ({
                                             <BsPin className='w-5  h-5   ' />
                                         }   
                                     </button>
-                                    <div className="px-3">
+                                    <div className="px-3 h-fir">
                                         <h2 className="font-medium text-lg">{note.title}</h2>
                                         <p className="text-base mt-4 text-gray-700">
-                                            <textarea className="bg-transparent resize-none cursor-default	outline-none border-none" readOnly name="" id=""  value={note.description ?? ''}/>
+                                            <CustomTextArea content={note.description ?? ''}/>
                                         </p>
                                     </div>
                                     <NoteTagsSection note={note}/>
@@ -286,11 +319,11 @@ const NatesData = ({
 
            
 
-                <EditNoteModal
-                    modalStyle={modalStyle}
-                    openNote={openNote}
-                    setOpenNote={setOpenNote}
-                />
+            <EditNoteModal
+                modalStyle={modalStyle}
+                openNote={openNote}
+                setOpenNote={setOpenNote}
+            />
 
 
         </div>

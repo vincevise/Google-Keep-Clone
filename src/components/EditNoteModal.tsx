@@ -1,6 +1,6 @@
 import { api } from '@/utils/api'
 import { Note } from '@prisma/client'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { BsPin, BsPinFill } from 'react-icons/bs'
 import { MdClose } from 'react-icons/md'
 import { initialNote } from './CreateNote'
@@ -24,6 +24,7 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
     const [editNote, setEditNote] = useState<Note>({...initialNote, id:0, userId:''});
 
     const ctx = api.useUtils();
+    const textareaRef = useRef<HTMLTextAreaElement | null>(null)
     const {data: noteTags} = api.label.getNotesTags.useQuery({
         noteId:editNote.id
     }); 
@@ -38,6 +39,15 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
             setEditNote(openNote)
         }
     },[openNote])
+
+    useEffect(() => {
+        if (textareaRef.current) {
+          // Resetting the height to recalculate the height based on the content
+          textareaRef.current.style.height = 'auto';
+          // Setting the new height based on the scrollHeight
+          textareaRef.current.style.height = textareaRef.current.scrollHeight + 'px';
+        }
+      }, [editNote, initialNote ,openNote]);
 
     console.log(editNote, 'editNote')
 
@@ -86,7 +96,14 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
                                     id=""
                                     className='text-base mt-4 text-gray-700 w-full outline-none resize-none bg-transparent'
                                     value={editNote.description!} 
-                                    onChange={(e)=>setEditNote({...editNote, description: e.target.value})}
+                                    onChange={(e)=>{
+                                        setEditNote({...editNote, description: e.target.value});
+                                        e.target.style.height = 'auto';
+    // Setting the new height based on the scrollHeight
+    e.target.style.height = e.target.scrollHeight + 'px';
+                                    }}
+
+                                    ref={textareaRef}
                                 />
                                 <div className='flex items-center gap-2 flex-wrap'>
                                     {noteTags?.map((tag)=>{

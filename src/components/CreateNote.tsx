@@ -117,7 +117,10 @@ const CreateNote = ({ tag }: Props) => {
                             className='text-sm block w-full mt-4 outline-none bg-transparent resize-none'
                             placeholder='Take a note...'
                             onChange={(e) => {
-                                setNote({ ...note, description: e.target.value })
+                                setNote({ ...note, description: e.target.value }); 
+                                e.target.style.height = 'auto';
+                                // Setting the new height based on the scrollHeight
+                                e.target.style.height = e.target.scrollHeight + 'px';
                             }}
                             ref={textAreaRef}
                         />
