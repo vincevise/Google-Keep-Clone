@@ -13,7 +13,7 @@ const Tags = ({tag, noteId}: Props) => {
     const ctx = api.useUtils();
     const { mutate: removeTags } = api.label.unlinkTagsToNote.useMutation({
         onSuccess: () => {
-            void ctx.label.getNotesTags.invalidate()
+            void ctx.label.getNotesLabels.invalidate()
         }
     });
     return (

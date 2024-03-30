@@ -14,7 +14,6 @@ const AddLabelModal = (props: Props) => {
     const { data } = api.label.getLabels.useQuery()
     const ctx = api.useUtils();
 
-    const {setLoading} = useGrid()
     
 
     const { mutate:createLabel, isLoading } = api.label.createLabel.useMutation({
@@ -23,7 +22,6 @@ const AddLabelModal = (props: Props) => {
         },
     })
 
-    setLoading(isLoading)
 
     const handleSubmit = () => {
         if (label.trim().length > 0) {
