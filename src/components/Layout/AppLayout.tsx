@@ -8,6 +8,9 @@ import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useStat
 import NavBar from "./NavBar";
 import Sidebar from "./Sidebar";
 import Landingpage from "../Landingpage";
+import NextProgress from 'nextjs-progressbar'
+import { useTheme } from "next-themes";
+import LoadingPage from "../LoadingPage";
 
 
 export const fontSans = FontSans({
@@ -21,7 +24,7 @@ type Props = {
 
 interface GridContextType {
   isGrid: boolean,
-  setIsGrid: Dispatch<SetStateAction<boolean>>
+  setIsGrid: Dispatch<SetStateAction<boolean>>, 
 }
 
 export const GridContext = createContext<GridContextType | undefined>(undefined)
@@ -33,7 +36,7 @@ const GridContextProvider = ({children}: any) =>{
 
 
   return(
-    <GridContext.Provider value={{isGrid, setIsGrid}}>
+    <GridContext.Provider value={{isGrid, setIsGrid }}>
       {children}
     </GridContext.Provider>
   )
@@ -47,7 +50,7 @@ export const useGrid = () => {
   }
   return {
     isGrid: context.isGrid,
-    setIsGrid: context.setIsGrid
+    setIsGrid: context.setIsGrid,
   }
 
 }
@@ -56,14 +59,20 @@ export default function AppLayout({children}:Props) {
 
   const user = useUser();
   const [openSideBar, setOpenSideBar] = useState(false);
-  const [isGrid, setIsGrid] = useState(true)
 
   const router = useRouter();
 
   console.log(router, 'router');
+  const { setTheme, theme } = useTheme();
   
 
-
+  console.log(user.isLoaded, 'user.isLoaded')
+  if(!user.isLoaded){
+    return (<div>
+        <LoadingPage/>
+    </div>
+      )
+  }
   return (
     <>
      
@@ -81,7 +90,8 @@ export default function AppLayout({children}:Props) {
                 <main className="" >
                   
                     <NavBar setOpenSideBar={setOpenSideBar}  />
-                    <div className="flex h-full  ">
+                    <NextProgress/> 
+                    <div className={`flex h-full bg-background_secondary `}>
 
                         <Sidebar openSideBar={openSideBar}/>
                         {/* main content */}

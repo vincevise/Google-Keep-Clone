@@ -17,6 +17,9 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ['google-keep-clone.s3.ap-south-1.amazonaws.com'], // Allow images from all sources
+  },
 };
 
 export default config;

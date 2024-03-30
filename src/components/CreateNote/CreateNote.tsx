@@ -4,15 +4,16 @@ import { useTheme } from 'next-themes';
 import { useEffect, useRef, useState } from 'react';
 import { BsFillPinFill, BsPin } from 'react-icons/bs';
 import BottomBarCreate from './BottomBarCreate';
-import TagCreate from './TagCreate';
-import { Button } from './ui/button';
+import { Button } from '../ui/button';
+import TagCreate from '../TagCreate';
 
 export const initialNote = {
     title: '',
     description: '',
     archived: false,
     backgroundColor: '',
-    pinned: false
+    pinned: false,
+    drawing: null
 }
 type Props = {
     tag?: Tag
@@ -66,13 +67,14 @@ const CreateNote = ({ tag }: Props) => {
 
         mutate({
             ...note,
-            description: note.description!,
+            title:note.title ?? '',
+            description: note.description ?? '',
             backgroundColor: note.backgroundColor!,
         })
     }
 
     const handleClose = () => {
-        if (note.title.trim().length === 0 && note.description!.trim().length === 0) {
+        if (note.title!.trim().length === 0 && note.description!.trim().length === 0) {
             setOpenCreateNote(false)
             setNote(initialNote)
             setTags([])
@@ -91,10 +93,13 @@ const CreateNote = ({ tag }: Props) => {
                 }} 
                 />
             }
-            <div className={`py-3 px-4 shadow-md   border   w-full max-w-lg rounded-lg mx-auto relative 
+            <div className={`py-3 px-4   border ${theme==='dark' ? 'border-white' : 'border-gray-600'}  w-full max-w-lg rounded-lg mx-auto relative 
                 ${openCreateNote && 'z-30'}
                 bg-background `} 
-                style={{background:`${note.backgroundColor}`}}
+                style={{
+                    background:`${note.backgroundColor}`,
+                    boxShadow: '3px 3px 1px 1px #0c0c0c' 
+                }}
             >
                 {openCreateNote ?
                     <div  >

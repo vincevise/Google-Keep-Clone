@@ -2,7 +2,7 @@ import { api } from '@/utils/api'
 import { Note } from '@prisma/client'
 import React from 'react'
 import { MdClose } from 'react-icons/md'
-import Tags from './Tags'
+import Tags from '../Tags'
 
 type Props = {
     note: Note
@@ -11,7 +11,7 @@ type Props = {
 const NoteTagsSection = ({ note }: Props) => {
 
     const ctx = api.useUtils()
-    const { data: noteTags } = api.label.getNotesTags.useQuery({
+    const { data: noteTags } = api.label.getNotesLabels.useQuery({
         noteId: note.id
     });
     

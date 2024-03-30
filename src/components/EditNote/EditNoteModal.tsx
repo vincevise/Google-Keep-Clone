@@ -1,11 +1,17 @@
 import { api } from '@/utils/api'
 import { Note } from '@prisma/client'
+import { useRouter } from 'next/navigation'
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react'
 import { BsPin, BsPinFill } from 'react-icons/bs'
 import { MdClose } from 'react-icons/md'
-import { initialNote } from './CreateNote'
-import BottomNavbar1 from './NotesOptionsComp/BottomNavbar1'
-import { Button } from './ui/button'
+import { initialNote } from '../CreateNote/CreateNote'
+import NoteInDrawing from '../SingleNote/NoteInDrawing'
+import { Button } from '../ui/button'
+import AddLabelMenu from './AddLabelMenu'
+import ArchiveButton from './ArchiveButton'
+import ChangeColorMenu from './ChangeColorMenu'
+import DeleteNote from './DeleteNote'
+import { OptionButton } from '../SingleNote/OptionButton'
 
 type Props = {
     modalStyle: {
@@ -22,15 +28,16 @@ type Props = {
 
 const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
     const [editNote, setEditNote] = useState<Note>({...initialNote, id:0, userId:''});
-
+    const [showDrawing, setShowDrawing] = useState(false); 
     const ctx = api.useUtils();
     const textareaRef = useRef<HTMLTextAreaElement | null>(null)
-    const {data: noteTags} = api.label.getNotesTags.useQuery({
+    const {data: noteTags} = api.label.getNotesLabels.useQuery({
         noteId:editNote.id
     }); 
+    const router = useRouter()
     const {mutate: removeTags} = api.label.unlinkTagsToNote.useMutation({
         onSuccess:()=>{
-            void ctx.label.getNotesTags.invalidate()
+            void ctx.label.getNotesLabels.invalidate()
         }
     });
 
@@ -57,37 +64,51 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
                 onClick={()=>setOpenNote(null)}
             ></div>
             <div
-                className=" text-black rounded-lg  z-30 "
+                className=" text-black rounded-lg z-30 relative"
                 style={{ 
                     ...modalStyle, 
                     position: 'fixed', 
+                    top:'50%'
+                    
                 }} 
                 // Use 'fixed' to position relative to the viewport
             >
+                 
                 {openNote &&
+                <>
+                    <button className='rounded-full fixed right-1 top-1    block hover:bg-gray-100 text-gray-600 hover:text-black p-2 z-20 ' onClick={(e) => e.stopPropagation()} >
+                        {editNote.pinned ? 
+                        <BsPinFill className='w-5 h-5'/> 
+                            :
+                        <BsPin className='w-5  h-5   ' />
+                        }
+                    </button>
                     <div
                         key={openNote.id}
-                        className={`   rounded-lg  select-none	  border border-gray-400  flex     w-full  overflow-hidden `}
-                        style={{backgroundColor:(editNote.backgroundColor === '' ? 'white' : editNote.backgroundColor) ??  'white'}}
+                        className={`   rounded-lg overflow-y-auto overflow-x-hidden  select-none	  border border-gray-400  flex  customscroll    w-full  `}
+                        style={{backgroundColor:(editNote.backgroundColor === '' ? 'white' : editNote.backgroundColor) ??  'white', maxHeight:'600px'}}
                     >
 
 
                         {/* Content */}
-                        <div className={` pt-3  relative w-full h-full     flex flex-col justify-between `}
+                        <div className={`    relative w-full h-full  mb-20   flex flex-col justify-between `}
 
                         >
-                            <button className='rounded-full absolute right-1 top-1    block hover:bg-gray-100 text-gray-600 hover:text-black p-2  ' onClick={(e) => e.stopPropagation()} >
-                                {editNote.pinned ? 
-                                <BsPinFill className='w-5 h-5'/> 
-                                    :
-                                <BsPin className='w-5  h-5   ' />
-                                }
-                            </button>
-                            <div className="px-3">
+                           
+                            {editNote.drawing
+                                && 
+                                <div className='block bg-red-100 fadeInAnimation ' onClick={()=>{
+                                    router.push(`/draw?id=${editNote.id}`)
+                                }} style={{width:600, height:600}}>
+                                    <NoteInDrawing drawing={editNote.drawing} notesContainrWidth={600}/>
+                                </div>
+                            }
+                            
+                            <div className="px-3 mt-3">
                                 <input 
                                     type="text" 
                                     className="font-medium bg-transparent text-lg w-full outline-none"
-                                    value={editNote.title}
+                                    value={editNote.title ?? ''}
                                     onChange={(e)=> setEditNote({...editNote, title: e.target.value})}
 
                                 />
@@ -99,8 +120,8 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
                                     onChange={(e)=>{
                                         setEditNote({...editNote, description: e.target.value});
                                         e.target.style.height = 'auto';
-    // Setting the new height based on the scrollHeight
-    e.target.style.height = e.target.scrollHeight + 'px';
+                                        // Setting the new height based on the scrollHeight
+                                        e.target.style.height = e.target.scrollHeight + 'px';
                                     }}
 
                                     ref={textareaRef}
@@ -125,12 +146,19 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
                                     })}
                                 </div>
                             </div>
-                            <div className="mb-1 mt-4 px-1">
+                            <div className="w-full mt-4 px-2 py-1  rounded-b-lg border-b fixed bottom-0" 
+                                style={{
+                                    backgroundColor:editNote.backgroundColor ?? 'white'
+                                }}>
                                 <div className='  flex justify-between items-center'>
-                                    <BottomNavbar1 
-                                        editNote={editNote}
-                                        setEditNote={setEditNote}
-                                    />
+                                    <div className='flex  gap-2 group  font-sans'>
+                                        <ChangeColorMenu editNote={editNote} setEditNote={setEditNote} />
+                                        <AddLabelMenu editNote={editNote}/>
+                                        <ArchiveButton note={editNote}/>
+                                        {/* <DeleteNote note={editNote} setOpenNote={setOpenNote}/> */}
+                                        <OptionButton note={editNote} />
+                                    </div>
+                                    
                                     <Button variant="ghost" className='rounded-md' onClick={()=>setOpenNote(null)}  >
                                         Close
                                     </Button>
@@ -139,6 +167,7 @@ const EditNoteModal = ({ modalStyle, openNote, setOpenNote }: Props) => {
                         </div>
 
                     </div>
+                </>
                 }
             </div>
         </>

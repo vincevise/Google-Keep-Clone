@@ -21,17 +21,17 @@ export const fontSans = FontSans({
 const AddLabelMenu = ({editNote}: Props) => {
   const ctx = api.useUtils();
   const {data: alltags} = api.label.getLabels.useQuery()
-  const {data:noteTags} = api.label.getNotesTags.useQuery({
+  const {data:noteTags} = api.label.getNotesLabels.useQuery({
       noteId:editNote.id
   });
   const {mutate:addTags} = api.label.linkTagsToNote.useMutation({
     onSuccess:()=>{
-      void ctx.label.getNotesTags.invalidate()
+      void ctx.label.getNotesLabels.invalidate()
     }
   })
   const {mutate:removeTags} = api.label.unlinkTagsToNote.useMutation({
     onSuccess:()=>{
-      void ctx.label.getNotesTags.invalidate()
+      void ctx.label.getNotesLabels.invalidate()
     }
   })
   const selectedTagIds = useMemo(() => new Set(noteTags?.map(tag => tag.id)), [noteTags]);

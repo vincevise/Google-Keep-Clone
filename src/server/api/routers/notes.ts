@@ -37,6 +37,22 @@ export const noteRouter = createTRPCRouter({
 
             return todos;
         }),
+    getNoteById: privateProcedure
+        .input(z.object({
+            id:z.number()
+        }))
+        .query(async({ctx, input})=>{
+            const {id} = input;
+            const note = await ctx.db.note.findUnique({
+                where:{
+                    id
+                }
+            })
+
+            
+
+            return note;
+        }),
     changeNoteColor: privateProcedure
         .input(z.object({
             backgroundColor: z.string(),
@@ -139,6 +155,24 @@ export const noteRouter = createTRPCRouter({
                     id: input.noteid
                 }
             }) 
+
+            return note;
+        }),
+    AddDrawing: privateProcedure
+        .input(z.object({
+            drawing:z.string(),
+            noteId:z.number()
+        }))
+        .mutation(async({ctx,input})=>{
+            const {noteId, drawing} = input
+            const note = await ctx.db.note.update({
+                where:{
+                    id:noteId
+                },
+                data:{
+                    drawing
+                }
+            })
 
             return note;
         })

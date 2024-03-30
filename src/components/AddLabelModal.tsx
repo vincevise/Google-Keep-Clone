@@ -4,6 +4,7 @@ import { MdCheck, MdClose } from 'react-icons/md'
 import { Button } from './ui/button'
 import { api } from '@/utils/api'
 import EditLabel from './EditLabel'
+import { useGrid } from './Layout/AppLayout'
 
 type Props = {}
 
@@ -12,12 +13,17 @@ const AddLabelModal = (props: Props) => {
     const [label, setLabel] = useState('');
     const { data } = api.label.getLabels.useQuery()
     const ctx = api.useUtils();
+
+    const {setLoading} = useGrid()
     
-    const { mutate:createLabel } = api.label.createLabel.useMutation({
+
+    const { mutate:createLabel, isLoading } = api.label.createLabel.useMutation({
         onSuccess(data, variables, context) {
             void ctx.label.getLabels.invalidate();
         },
     })
+
+    setLoading(isLoading)
 
     const handleSubmit = () => {
         if (label.trim().length > 0) {

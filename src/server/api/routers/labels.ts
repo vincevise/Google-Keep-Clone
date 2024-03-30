@@ -14,7 +14,7 @@ export const labelsRouter = createTRPCRouter({
 
             return tags
         }),
-    getNotesTags: privateProcedure
+    getNotesLabels: privateProcedure
         .input(z.object({
             noteId: z.number().optional(),
         })).query(async ({ ctx, input }) => {

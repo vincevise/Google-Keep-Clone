@@ -1,12 +1,13 @@
 -- CreateTable
 CREATE TABLE "Note" (
     "id" SERIAL NOT NULL,
-    "title" TEXT NOT NULL,
+    "title" TEXT,
     "description" TEXT,
     "archived" BOOLEAN NOT NULL DEFAULT false,
     "backgroundColor" TEXT,
     "pinned" BOOLEAN NOT NULL DEFAULT false,
     "userId" TEXT NOT NULL,
+    "drawing" TEXT,
 
     CONSTRAINT "Note_pkey" PRIMARY KEY ("id")
 );

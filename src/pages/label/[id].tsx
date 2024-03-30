@@ -1,4 +1,4 @@
-import CreateNote from '@/components/CreateNote'
+import CreateNote from '@/components/CreateNote/CreateNote'
 import AppLayout from '@/components/Layout/AppLayout'
 import NotesData from '@/components/NotesData'
 import { api } from '@/utils/api'

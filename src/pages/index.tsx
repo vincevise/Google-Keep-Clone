@@ -1,6 +1,5 @@
 import Head from "next/head";
 
-import CreateNote from "@/components/CreateNote";
 import AppLayout from "@/components/Layout/AppLayout";
 import NotesData from "@/components/NotesData";
 import { api } from "@/utils/api";
@@ -8,6 +7,7 @@ import { useUser } from "@clerk/nextjs";
 import { Inter as FontSans } from "next/font/google";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import CreateNote from "@/components/CreateNote/CreateNote";
 
 
 

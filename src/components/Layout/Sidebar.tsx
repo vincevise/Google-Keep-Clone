@@ -26,10 +26,9 @@ const Sidebar = ({ openSideBar }: Props) => {
 
     return (
         <div className={`${openSideBar ? 'w-64' : 'w-16'}  shrink-0  relative  h-screen`}>
-            <div className={`  ${openSideBar ? 'w-64' : 'w-16'} h-screen pt-16 fixed top-0  flex flex-col `}>
-                <div className={`py-2  ${!openSideBar && 'pl-3'}`}>
-                    <Link href={'/'} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}   flex  items-center relative gap-6 ${router.pathname==='/' ? `${theme==='dark' ? 'bg-yellow-900' : 'bg-yellow-100'}` : ` ${theme==='dark' ? 'hover:bg-white/20' : 'hover:bg-gray-100'}`}`}
-                        
+            <div className={`  ${openSideBar ? 'w-64' : 'w-16'} h-screen pt-16 fixed top-0  flex flex-col    `}>
+                <div className={`py-2 space-y-2 ${!openSideBar && 'pl-3'}`}>
+                    <Link href={'/'} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}   flex  items-center relative gap-6 ${router.pathname==='/' ? `${theme==='dark' ? 'bg-[#fbc531]' : 'bg-yellow-300 border'}` : ` ${theme==='dark' ? 'hover:bg-white/20' : 'hover:bg-white'}`}`}
                     >
                         <MdLightbulbOutline className='w-6 h-6' />
                         {openSideBar && <span className=' text-sm'>Notes</span>}
@@ -40,7 +39,7 @@ const Sidebar = ({ openSideBar }: Props) => {
                             const path = router.query.id
                             console.log(path===label.name, 'pathname')
 
-                            return (<Link href={`/label/${label.name}`} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}   flex  items-center relative gap-6 ${path===label.name ? `${theme==='dark' ? 'bg-yellow-900' : 'bg-yellow-100'}` : `${theme === 'dark' ?'hover:bg-white/20' :'hover:bg-gray-100'}`} `}
+                            return (<Link href={`/label/${label.name}`} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}   flex  items-center relative gap-6 ${path===label.name ? `${theme==='dark' ? 'bg-yellow-900' : 'bg-yellow-300 border border-gray-800'}` : ` ${theme==='dark' ? 'hover:bg-white/20' : 'hover:bg-white'}`} `}
                             key={`label_key_${label.id}`}
                             >
                             <MdLabelOutline className='w-6 h-6' />
@@ -52,7 +51,7 @@ const Sidebar = ({ openSideBar }: Props) => {
 
                     <Dialog>
                         <DialogTrigger asChild >
-                            <button className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'} ${theme === 'dark' ?'hover:bg-white/20' :'hover:bg-gray-100'}  flex  items-center relative gap-6 `}>
+                            <button className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'} ${theme === 'dark' ?'hover:bg-white/20' :'hover:bg-white'}  flex  items-center relative gap-6 `}>
                                 <MdOutlineEdit className='w-6 h-6' />
                                 {openSideBar && <span className=' text-sm '>Label</span>}
                             </button>
@@ -61,7 +60,7 @@ const Sidebar = ({ openSideBar }: Props) => {
                     </Dialog>
 
 
-                    <Link href={'/archived'} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}    flex  items-center relative gap-6 ${router.pathname==='/archived' ? 'bg-yellow-100' : `${theme === 'dark' ?'hover:bg-white/20' :'hover:bg-gray-100'} `}`}>
+                    <Link href={'/archived'} className={`${openSideBar ? 'pl-6 w-full h-12 rounded-r-full justify-start' : 'w-12 h-12 rounded-full justify-center'}    flex  items-center relative gap-6 ${router.pathname==='/archived' ? 'bg-yellow-300 border border-gray-800' : `${theme === 'dark' ?'hover:bg-white/20' :'hover:bg-white'} `}`}>
                         <MdOutlineArchive className='w-6 h-6' />
                         {openSideBar && <span className=' text-sm '>Archived</span>}
                     </Link>

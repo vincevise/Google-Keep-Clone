@@ -1,124 +1,84 @@
-import React, { useState, useEffect } from 'react';
-import _ from 'lodash';
-import RGL, { WidthProvider } from 'react-grid-layout';
-
-const ReactGridLayout = WidthProvider(RGL);
-
-import GridLayout from "react-grid-layout";
-import { PiDotsSixVerticalBold } from 'react-icons/pi';
-import { BsUiChecksGrid } from 'react-icons/bs';
-import { Button } from './ui/button';
-import { SignInButton, SignUpButton } from '@clerk/nextjs';
-
-const MyFirstGrid = () => {
-    // Layout is an array of objects, see the demo for more complete usage
-    const layout = [
-        { i: 'c', x: 4, y: 0, w: 1, h: 2 }
-    ];
-
-
-
-    return (
-        <div className='w-full h-screen mx-auto overflow-hidden '>
-
-            <GridLayout
-                className="layout bg-background"
-                layout={layout}
-                cols={50}
-                rowHeight={50}
-                width={1200}
-                compactType={'horizontal'}
-                style={{ height: '100vh',width:'100vw' }}
-                isResizable={false}
-            >
-                <div 
-                    key="a" 
-                    className='bg-[#fec347] rounded-lg   select-none border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all'    data-grid={{ 
-                        x: 1, 
-                        y: 0, 
-                        w: 10, 
-                        h: 3, 
-                    }}
-                >
-                     <div className=" h-full px-0.5 flex flex-col justify-end py-4 bg-gray-100 rounded-l-md  cursor-move  ">
-                                    <PiDotsSixVerticalBold className="w-6 h-6 text-black" />
-                                </div>
-                </div>
-                <div 
-                    key="b" 
-                    data-grid={{ x: 1, y: 0, w: 10, h: 5 }}
-                    className='bg-[#f26e56] rounded-lg   select-none border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all'
-                >
-                    <div className=" h-full px-0.5 flex flex-col justify-end py-4 bg-gray-100 rounded-l-md  cursor-move  ">
-                                    <PiDotsSixVerticalBold className="w-6 h-6 text-black" />
-                                </div>
-                </div>
-                <div 
-                    key="c" 
-                    data-grid={{ x: 1, y: 0, w: 10, h: 4 }}
-                    className='bg-[#5694f2] rounded-lg   select-none border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all'
-                >
-                    <div className=" h-full px-0.5 flex flex-col justify-end py-4 bg-gray-100 rounded-l-md  cursor-move  ">
-                                    <PiDotsSixVerticalBold className="w-6 h-6 text-black" />
-                                </div>
-                </div>
+/*
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  const colors = require('tailwindcss/colors')
+  
+  module.exports = {
+    // ...
+    theme: {
+      extend: {
+        colors: {
+          rose: colors.rose,
+        },
+      },
+    },
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+*/
+import { ChevronRightIcon, StarIcon } from '@heroicons/react/20/solid'
+import { Button } from './ui/button'
+import { RedirectToSignIn, SignIn, SignInButton, SignUpButton, redirectToSignUp } from '@clerk/nextjs'
+import { BsUiChecksGrid } from 'react-icons/bs'
+import Image from 'next/image'
+import { BiRightArrow, BiSolidRightArrow } from 'react-icons/bi'
+import {IoMdArrowForward} from 'react-icons/io'
+import { redirectToSignIn } from '@clerk/nextjs/server'
  
-                <div className='bg-gradient-to-r from-slate-900 to-slate-700 rounded-lg   select-none border border-gray-400 hover:drop-shadow-lg flex group    w-full   transition-all' key={'d'} data-grid={{x:10, y:2, w:27, h:6}}>
-                    <div className=" h-full px-0.5 flex flex-col justify-end py-4 bg-gray-100 rounded-l-md  cursor-move  ">
-                        <PiDotsSixVerticalBold className="w-6 h-6 text-black" />
-                    </div>
-                    <div className=' px-2 py-4     w-full  flex items-center  ' onMouseDown={(e) => e.stopPropagation()}>
-                        <div className='w-full flex flex-col gap-4 p-6 items-start justify-center border-r border-white/40'>
-                            <BsUiChecksGrid className='w-20 h-20' />
-                            <h1 className='text-2xl font-medium'>Notes App</h1>
-                            <p className='text-sm opacity-80'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, mollitia veritatis id ratione voluptatibus quaerat nobis autem est iure consectetur!</p>
-                        </div>
-                        <div className='w-full h-full p-6 flex flex-col  items-center justify-between gap-3'>
-                            <p className='text-xl text-left w-full'>Lets Gets Started</p>
-                            <div className='w-full flex flex-col gap-2 '>
-                                <Button variant={'default'} className='w-full'>
-                                    <SignInButton >Sign in</SignInButton>
-                                </Button>
-                                <Button variant={'outline'} className='w-full'>
-                                    <SignUpButton >Sign Up</SignUpButton>
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+
+export default function Example() {
+  return (
+    <div className='w-screen  h-full bg-gradient-to-r from-slate-900 to-slate-700  '>
+        <header className={` h-16 flex     drop-shadow-sm items-center justify-between p-4 fixed top-0 left-0 w-full z-20  `}>
+            <div className='flex items-center gap-4'>
+                 
+                <BsUiChecksGrid  className="w-8 h-8" /> 
+                {/* <span className='text-2xl font-medium'>Notes App</span> */}
+            </div>
+             
+            <div className='flex gap-2 items-center'>
+                <SignInButton>
+                    <Button >
+                        Sign In
+                    </Button>
+                </SignInButton>
+                <SignUpButton>
+                    <Button variant={'outline'} onClick={()=>redirectToSignUp()}>
+                        Sign Up
+                    </Button>
+                </SignUpButton>
+            </div>
+        </header>
+        <main className='w-full h-full  pt-20 flex flex-col items-center '>
+            <div className='w-full max-w-2xl text-center flex flex-col items-center mx-auto'>
+                <div className='flex items-center mb-8 justify-start text-4xl gap-2'>
+                <a href="#" className="inline-flex space-x-4">
+                    <span className="rounded bg-gray-50 px-2.5 py-1 text-sm font-semibold text-gray-500">
+                      What's new
+                    </span>
+                    <span className="inline-flex items-center space-x-1 text-sm font-medium text-gray-500">
+                      <span>Just shipped version 0.1.0</span>
+                      <ChevronRightIcon className="h-5 w-5" aria-hidden="true" />
+                    </span>
+                  </a>
                 </div>
-            </GridLayout>
-        </div>
-    );
-};
+                    <h1 className='font-extrabold text-transparent text-5xl bg-clip-text bg-gradient-to-r from-gray-400 to-white'>Lorem, ipsum dolor sit amet consectetur adipisicing elit.</h1>
+                <p className='mt-8 mx-2 text-gray-100/50'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Facere soluta blanditiis </p>
+                <Button variant={'ghost'} size={'lg'} className='my-8 gap-2 border group border-slate-100 hover:bg-white hover:text-gray-900 rounded-lg'>Get Started <IoMdArrowForward  
+                className='w-6 h-6 group-hover:translate-x-2 transition-all'/></Button>
+            </div>
+            <div className='relative   mt-4 w-full max-w-5xl mx-auto h-full'>
+                <div className='w-full  h-full drop-shadow-2xl absolute bottom-0 rounded-t-3xl bg-red-100   ' style={{boxShadow: '0px 0px 30px 6px #ccc'}} >
 
-export default MyFirstGrid;
-
-
-
-
-
-
-
-{/* <div className={`absolute h-80 flex items-center max-w-3xl inset-x-0 mx-auto  top-1/2 border -translate-y-1/2 bg-gradient-to-r from-slate-900 to-slate-700 rounded-xl overflow-hidden group ${toggltBorder && 'ring-1 ring-foreground ring-offset-1'}`}>
-<button className='h-80  flex flex-col justify-end items-center px-2 py-4 active bg-gray-100 cursor-grab' onMouseDown={(e)=>{  e.stopPropagation(); setToggleBorder(true)}}   onMouseUp={()=>setToggleBorder(false)}>
-    <PiDotsSixVerticalBold className="w-8 h-8 text-gray-600" />
-</button>
-<div className=' px-2 py-4     w-full  flex items-center  '>
-    <div className='w-full flex flex-col gap-4 p-6 items-start justify-center border-r border-white/40'>
-        <BsUiChecksGrid className='w-20 h-20'/>
-        <h1 className='text-2xl font-medium'>Notes App</h1>
-        <p className='text-sm opacity-80'>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, mollitia veritatis id ratione voluptatibus quaerat nobis autem est iure consectetur!</p>
+                    <Image alt='Landing Page' width={2000} height={2000}  src={'/Screenshot (27).png'} className='w-full h-full object-cover object-top	rounded-t-3xl'/>
+                </div>
+            </div>
+        </main>
     </div>
-    <div className='w-full h-full p-6 flex flex-col  items-center justify-between gap-3'>
-        <p className='text-xl text-left w-full'>Lets Gets Started</p>
-        <div className='w-full flex flex-col gap-2 '>
-            <Button variant={'default'} className='w-full'>
-                <SignInButton >Sign in</SignInButton>
-            </Button>
-            <Button variant={'outline'} className='w-full'>
-                <SignUpButton >Sign Up</SignUpButton>
-            </Button>
-        </div>
-    </div>
-</div>
-</div> */}
+  )
+}
