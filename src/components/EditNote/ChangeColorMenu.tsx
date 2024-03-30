@@ -33,7 +33,6 @@ function conformsToInterface(obj: any, intf: any) {
 
 const ChangeColorMenu = ({ editNote, setEditNote }: Props) => {
     const ctx = api.useUtils();
-    const {loading} = useGrid()
 
     const { mutate, isLoading } = api.note.changeNoteColor.useMutation(
         {
