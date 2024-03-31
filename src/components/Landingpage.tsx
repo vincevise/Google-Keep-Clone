@@ -41,7 +41,7 @@ export default function Example() {
                 {/* <span className='text-2xl font-medium'>Notes App</span> */}
             </div>
              
-            <div className='flex gap-2 hidden md:block items-center'>
+            <div className='flex gap-2 hidden md:block items-center' style={{display: 'flex', gap:'10px', alignItems:'center' }}>
                 <SignInButton>
                     <Button >
                         Sign In
@@ -81,7 +81,8 @@ export default function Example() {
                     </Button>
                 </SignUpButton>
             </div>
-                  <Button variant={'ghost'} size={'lg'} className='hidden md:block my-4 lg:my-8 gap-2 border group border-slate-100 hover:bg-white hover:text-gray-900 rounded-lg'>Get Started    
+                  <Button variant={'ghost'} size={'lg'} className='hidden md:block my-4 lg:my-8 gap-2 border group text-slate-100 border-slate-100 hover:bg-white hover:text-gray-900 rounded-lg flex items-center' style={{display:'flex', alignItems:'center'}}>
+                    <span>Get Started</span>    
                   
                     <IoMdArrowForward className='w-6 h-6 group-hover:translate-x-2 transition-all'/>
                   </Button>

@@ -18,7 +18,14 @@ const config = {
     defaultLocale: "en",
   },
   images: {
-    domains: ['google-keep-clone.s3.ap-south-1.amazonaws.com'], // Allow images from all sources
+    // domains: ['google-keep-clone.s3.ap-south-1.amazonaws.com'], // Allow images from all sources
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'google-keep-clone.s3.ap-south-1.amazonaws.com',
+        port: '',
+      },
+    ],
   },
 };
 
